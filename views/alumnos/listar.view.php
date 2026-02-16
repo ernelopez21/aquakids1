@@ -1,37 +1,15 @@
 <?php require '../../views/layouts/main.php'; ?>
 
 <?php
-// Función para calcular edad (por si la quieres volver a usar)
+// Función para calcular edad (corregida y segura)
 function calcularEdad($fecha) {
     if (!$fecha) return '-';
     $dob = new DateTime($fecha);
     $hoy = new DateTime();
     return $hoy->diff($dob)->y;
 }
-// Función último pago - Versión FINAL (mensualidad)
-function ultimoPago($id_alumno, $pdo) {
-    $stmt = $pdo->prepare("SELECT MAX(fecha_pago) AS ultimo FROM pagos WHERE id_alumno = ?");
-    $stmt->execute([$id_alumno]);
-    $fecha = $stmt->fetchColumn();
 
-    if (!$fecha) {
-        return '<span class="badge bg-danger">Sin pagos</span>';
-    }
-
-    $ultimo = new DateTime($fecha);
-    $hoy    = new DateTime();
-    $dias   = $hoy->diff($ultimo)->days;
-
-    $fechaFormateada = date('d/m/Y', strtotime($fecha));
-
-    if ($dias > 30) {
-        return '<span class="badge bg-danger">Vencido</span> ' . $fechaFormateada;
-    } else {
-        return '<span class="badge bg-success">Al día</span> ' . $fechaFormateada;
-    }
-}
-
-// Función resumen de horarios
+// Función resumen horarios (mejorada con rango)
 function resumenHorarios($id_alumno, $pdo) {
     $stmt = $pdo->prepare("
         SELECT d.nombre_dia, h.hora_inicio, h.hora_fin, h.descripcion 
@@ -69,7 +47,8 @@ function resumenHorarios($id_alumno, $pdo) {
         <thead class="table-dark">
             <tr>
                 <th>Nombre Completo</th>
-                <th>Último Pago</th>
+                <th>Fecha Nacimiento</th>
+                <th>Edad</th>
                 <th>Horarios Asignados</th>
                 <th>Acciones</th>
             </tr>
@@ -77,19 +56,13 @@ function resumenHorarios($id_alumno, $pdo) {
         <tbody>
             <?php
             $pdo = getPDO();
-            
-            // Consulta corregida (sin NULLS LAST)
-            $stmt = $pdo->query("
-                SELECT a.* 
-                FROM alumnos a 
-                ORDER BY (SELECT MAX(p.fecha_pago) FROM pagos p WHERE p.id_alumno = a.id_alumno) DESC, 
-                         a.nombre ASC
-            ");
-
+            $stmt = $pdo->query("SELECT * FROM alumnos ORDER BY nombre, apellido");
             while ($a = $stmt->fetch()) {
+                $edad = calcularEdad($a['fecha_nacimiento']);
                 echo "<tr>
                     <td>" . htmlspecialchars($a['nombre'] . ' ' . $a['apellido']) . "</td>
-                    <td>" . ultimoPago($a['id_alumno'], $pdo) . "</td>
+                    <td>" . ($a['fecha_nacimiento'] ? date('d/m/Y', strtotime($a['fecha_nacimiento'])) : '-') . "</td>
+                    <td><strong>$edad años</strong></td>
                     <td>" . resumenHorarios($a['id_alumno'], $pdo) . "</td>
                     <td>
                         <a href='editar.php?id={$a['id_alumno']}' class='btn btn-sm btn-warning'>Editar</a>

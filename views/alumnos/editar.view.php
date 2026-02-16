@@ -37,7 +37,7 @@
 
         <!-- Asignación horarios con Alpine.js -->
         <div class="card">
-            <div class="card-header"><h5>Modificar Horario</h5></div>
+            <div class="card-header"><h5>Asignar Horario</h5></div>
             <div class="card-body">
                 <?php foreach ($dias as $dia): 
                     $diaId = $dia['id_dia'];
