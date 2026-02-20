@@ -27,6 +27,7 @@ if (!isset($_SESSION['usuario'])) {
             <li class="nav-item"><a href="../dashboard.php" class="nav-link text-white">🏠 Dashboard</a></li>
             <li class="nav-item"><a href="../alumnos/listar.php" class="nav-link text-white">👥 Alumnos</a></li>
             <li class="nav-item"><a href="../horarios/listar.php" class="nav-link text-white">⏰ Horarios</a></li>
+            <a href="../pagos/nueva_tarjeta.php">Nueva Tarjeta de Pago</a>
             <li class="nav-item">
     <a href="../alumnos/lista_horarios.php" class="nav-link text-white">
         📅 Horarios Disponibles

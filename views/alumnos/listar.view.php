@@ -24,7 +24,7 @@ function resumenHorarios($id_alumno, $pdo) {
     if (empty($res)) return '-';
     $salida = [];
     foreach ($res as $r) {
-        $rango = substr($r['hora_inicio'], 0, 5) . '-' . substr($r['hora_fin'], 0, 5);
+        $rango = substr($r['hora_inicio'], 0, 5);
         $desc = $r['descripcion'] ? ' (' . htmlspecialchars($r['descripcion']) . ')' : '';
         $salida[] = $r['nombre_dia'] . ' ' . $rango . $desc;
     }

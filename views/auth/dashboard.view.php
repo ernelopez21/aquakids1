@@ -79,6 +79,24 @@ $vencidos = $pdo->query("
                 </a>
             </div>
 
+                        <!-- En views/dashboard.view.php o donde esté el dashboard, reemplaza la card de "Gestionar Pagos" -->
+            <div class="col-md-4 mb-3">
+                <div class="card text-white bg-primary" x-data="{ open: false }">
+                    <div class="card-body">
+                        <h5 class="card-title">Gestionar Pagos</h5>
+                        <button class="btn btn-light btn-sm w-100" @click="open = !open">
+                            <span x-text="open ? 'Ocultar Opciones' : 'Ver Opciones'"></span>
+                        </button>
+                        <div x-show="open" class="mt-3">
+                            <a href="pagos/nueva_tarjeta.php" class="btn btn-secondary btn-block mb-2">Crear nueva tarjeta de pago</a>
+                            <a href="pagos/listar_tarjetas.php" class="btn btn-secondary btn-block">Listar tarjetas de pagos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
             <!-- Instructores (desactivado por ahora) -->
             <div class="col-md-4">
                 <a href="#" 
@@ -90,6 +108,7 @@ $vencidos = $pdo->query("
         </div>
     </div>
 
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js" defer></script>
 </body>
 </html>
 
